@@ -1,5 +1,3 @@
-const rp = require("request-promise");
-const request = require("request");
 const $ = require("cheerio");
 const puppeteer = require("puppeteer");
 const mongoose = require("mongoose");
@@ -31,153 +29,111 @@ var albumSchema = new mongoose.Schema({
 var Album = mongoose.model("Album", albumSchema);
 
 // Parse data from website to get list of albums to add to Album collection - https://www.complex.com/music/best-albums-2018
+puppeteer
+  .launch()
+  .then(function(browser) {
+    return browser.newPage();
+  })
+  .then(function(page) {
+    return page.goto(url).then(function() {
+      return page.content();
+    });
+  })
+  .then(function(html) {
+    //Select markup on page containing artist and album names.
+    const albumArtistHTML = $(".list-slide__title", html);
+    //Add artist, album and position of each album to an array
+    albumArtistHTML.each(function() {
+      albumArtistArr.push($(this).text());
+    });
+    // Extract album names and add to database - https://stackoverflow.com/questions/12367126/how-can-i-get-a-substring-located-between-2-quotes
+    albumArtistArr.forEach(function(e) {
+      Album.create({
+        name: e.match(/‘([^']+)’/)[1]
+      });
+    });
+  })
+  .catch(function(err) {
+    //handle error
+    console.log(err);
+  });
 
-// puppeteer
-//   .launch()
-//   .then(function (browser) {
-//     return browser.newPage();
-//   })
-//   .then(function (page) {
-//     return page.goto(url).then(function () {
-//       return page.content();
-//     });
-//   })
-//   .then(function (html) {
-//     //Select markup on page containing artist and album names.
-//     const albumArtistHTML = $(".list-slide__title", html);
-//     //Add artist, album and position of each album to an array
-//     albumArtistHTML.each(function(){
-//       albumArtistArr.push($(this).text());
-//     });
-//     // Extract album names and add to database - https://stackoverflow.com/questions/12367126/how-can-i-get-a-substring-located-between-2-quotes
-//     albumArtistArr.forEach(function (e) {
-//       Album.create({
-//         name: e.match(/‘([^']+)’/)[1]
-//       });
-//     });
-//   })
-//   .then(function(){
-//     var options = {
-//       url:
-//         `https://api.spotify.com/v1/search?q=${albums[0]}&type=album&market=US&limit=1&offset=0`,
-//       headers: {
-//         Authorization: "Bearer " + accessToken
-//       },
-//       json: true
-//     };
 
-//     request.get(options, function (error, response, body) {
-//       console.log(body.albums.items[0].id);
-//     });
-
-//   })
-//   .catch(function (err) {
-//     //handle error
-//     console.log(err);
-//   });
-
-// var options = {
-//   url:
-//     "https://api.spotify.com/v1/search?q=Offset&type=artist&market=US&limit=10&offset=0",
-//   headers: {
-//     Authorization: "Bearer " + accessToken
-//   },
-//   json: true
-// };
-
-// request.get(options, function(error, response, body){
-//   console.log(body.artists.items[0].id);
-// });
+var options = {
+  url: `https://api.spotify.com/v1/search?q=${albums[i].name}&type=album&market=US&limit=1&offset=0`,
+  headers: {
+    Authorization: "Bearer " + accessToken
+  },
+  json: true // Automatically stringifies the body to JSON
+};
 
 //Add Spotify Album IDs and artist names to album documents
-
-// Album.find({}, function(err, albums) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     //Iterate through the array of queried albums
-//     for (var i = 0; i < albums.length; i++) {
-//       var options = {
-//         url: `https://api.spotify.com/v1/search?q=${albums[i].name}&type=album&market=US&limit=1&offset=0`,
-//         headers: {
-//           Authorization: "Bearer " + accessToken
-//         },
-//         json: true
-//       };
-//       //Send search request to spotify for each album
-//       request.get(options, function(error, response, body) {
-//         //Update found album with album id and artist name from Spotify
-//         Album.findOneAndUpdate(
-//           { name: /body.albums.items[0].name/i},
-//           {
-//             album_id: body.albums.items[0].id,
-//             artist: body.albums.items[0].artists[0].name
-//           },
-//           function(err, albums) {
-//             if (err) {
-//               console.log(err);
-//             } else {
-//               console.log(albums);
-//             }
-//           }
-//         );
-//       });
-//     }
-//   }
-// });
-
-
+Album.find({}, function(err, albums) {
+  if (err) {
+    console.log(err);
+  } else {
+    //Iterate through the array of queried albums
+    for (var i = 0; i < albums.length; i++) {
+      //Update url to match 
+      options.url = `https://api.spotify.com/v1/search?q=${albums[i].name}&type=album&market=US&limit=1&offset=0`
+      //Send search request to spotify for each album - options.url
+      request.get(options, function(error, response, body) {
+        //Search for specific album and add album id and artist name received from Spotify query
+        Album.findOneAndUpdate(
+          { name: /body.albums.items[0].name/i},
+          {
+            album_id: body.albums.items[0].id,
+            artist: body.albums.items[0].artists[0].name
+          },
+          function(err) {
+            if (err) {
+              console.log(err);
+            }
+            else {
+              console.log("Album data added successfully");
+            }
+          }
+        );
+      });
+    }
+  }
+});
 
 // Add tracklists to album documents
-
-// Album.find({}, function(err, albums) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     //Iterate through the array of queried albums
-//     for (var i = 0; i < albums.length; i++) {
-//       var options = {
-//         //Construct Get Album's Tracks Endpoint
-//         url: `https://api.spotify.com/v1/albums/${albums[i].album_id}/tracks`,
-//         headers: {
-//           Authorization: "Bearer " + accessToken
-//         },
-//         json: true
-//       };
-//       //Send request to spotify for tracklist of album
-//       request.get(options, function(error, response, body) {
-//         //Generate array of track names, ids and track numbers
-//         var tracklist = [];
-//         for (var j = 0; j < body.items.length; j++){
-//           tracklist[j] = {
-//             track_id: body.items[j].id,
-//             name: body.items[j].name,
-//             track_number: body.items[j].track_number
-//           }
-//         };
-//         //Update found album with album id and artist name from Spotify
-//         Album.findOneAndUpdate(
-//           { artist: body.items[0].artists[0].name },
-//           {
-//             tracklist: tracklist
-//           },
-//           function(err, albums) {
-//             if (err) {
-//               console.log(err);
-//             }
-//           }
-//         );
-//       });
-//     }
-//   }
-// });
-
-
-
-
-
-// Album.findByIdAndUpdate("5c0986feea376e38b819cf71", {name: "Royce Da 5'9\""}, function(err, album){
-//   console.log(album);
-// });
+Album.find({}, function(err, albums) {
+  if (err) {
+    console.log(err);
+  } else {
+    //Iterate through the array of queried albums
+    for (var i = 0; i < albums.length; i++) {
+      //Construct URL to get album's tracklist
+      options.url = `https://api.spotify.com/v1/albums/${albums[i].album_id}/tracks`;
+      //Send request to spotify for tracklist of album
+      request.get(options, function(error, response, body) {
+        //Generate array of track names, ids and track numbers
+        var tracklist = [];
+        for (var j = 0; j < body.items.length; j++){
+          tracklist[j] = {
+            track_id: body.items[j].id,
+            name: body.items[j].name,
+            track_number: body.items[j].track_number
+          }
+        };
+        //Update found album with album id and artist name from Spotify
+        Album.findOneAndUpdate(
+          { artist: body.items[0].artists[0].name },
+          {
+            tracklist: tracklist
+          },
+          function(err, albums) {
+            if (err) {
+              console.log(err);
+            }
+          }
+        );
+      });
+    }
+  }
+});
 
 module.exports = Album;
