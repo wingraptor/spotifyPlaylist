@@ -5,10 +5,10 @@ const url =
   "https://www.complex.com/music/best-albums-2018/mariah-carey-caution";
 
 //Spotify config
-const my_client_id = "624b38195d6f486f9b290e99fc6e8b91"; // Spotify client id
-const client_secret = "0c2a75363bdf49cda33db3c4fde553d9"; // Spotify secret
+const client_id = process.env.client_id; // Spotify client id
+const client_secret = process.env.client_secret; // Spotify secret
 const accessToken =
-  //Spotify access token
+  //Spotify access token - can be obtained from - https://developer.spotify.com/console/get-album/?id=0sNOF9WDwhWunNAHPD3Baj
   "BQCAMlMUonAx-k-_pSttqVKxXG5TJsGOiejfgT7MB6tRjRK5Qm7FmPpPbVQH4T9lN8NvjoNbGv8SLqvrOiDY3HAOelLUnkS9UPbhk4obX9IKaVrxIeM2t5sY-1i_uTruy8eP1AIle7HgXiC8PIQwZSKb5cUHMqqL9g2AU8ayp7YSJN0";
 const albumArtistArr = [];
 

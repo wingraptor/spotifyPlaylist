@@ -1,11 +1,17 @@
-const request = require("request");
-const rp = require("request-promise");
-const mongoose = require("mongoose");
-const ejs = require("ejs");
-const express = require("express");
-const queryString = require("query-string");
-const cookieParser = require("cookie-parser");
-const Album = require("./app.js");
+const cookieParser = require("cookie-parser"),
+      queryString  = require("query-string"),
+      mongoose     = require("mongoose"),
+      express      = require("express"),
+      request      = require("request"),
+      Album        = require("./app.js"),
+      ejs          = require("ejs"),
+      rp           = require("request-promise");
+
+
+
+//Environment variable setup
+require("dotenv").config();
+
 
 //mongoose config
 mongoose.connect(
@@ -14,15 +20,17 @@ mongoose.connect(
 );
 
 //EJS + Express config
-var app = express();
+const app = express();
 app.set("view engine", "ejs");
 app.use(cookieParser());
+app.use(express.static(__dirname + "/public"));
 
-const name = "Test2";
+const port = process.env.PORT || 3000;
+const IP = process.env.IP || "";
 
 //Spotify config
-const client_id = "624b38195d6f486f9b290e99fc6e8b91"; // Spotify client id
-const client_secret = "0c2a75363bdf49cda33db3c4fde553d9"; // Spotify secret
+const client_id = process.env.client_id; // Spotify client id
+const client_secret = process.env.client_secret; // Spotify secret
 const redirect_uri = "http://localhost:3000/callback";
 const stateKey = "spotify_auth_state";
 
@@ -131,7 +139,7 @@ app.get("/callback", function(req, res) {
             options.url = `https://api.spotify.com/v1/users/${body.id}/playlists`;
             options.method = "POST";
             options.body = {
-              name: name,
+              name: "Top 50 Hip hop tracks - 2018",
               description:
                 "Songs from the best 50 albums of 2018 according to Complex Mag.",
               public: false
@@ -205,7 +213,7 @@ function addTracks(arr) {
 
 //Tell Express to listen for requests on port 3000 (starts local server)
 //Visit localhost:3000 to reach site being served by local server.
-app.listen(3000, function() {
+app.listen(port, IP, function() {
   //Logs "Server has started" to the console when server has been started
   console.log("Server has started");
 });
