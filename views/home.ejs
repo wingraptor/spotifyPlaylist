@@ -1,16 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Spotify Playlist</title>
-</head>
-<body>
-  <a href="/login">
-    <button>
-      Authorize Spotify 
-    </button>
-  </a>
-</body>
-</html>
+<% include partials/header %>
+<div class="headerDiv">
+  <header>
+    <h1>Best Albums of 2018</h1>
+    <span>according to <a href="https://www.complex.com/music/best-albums-2018/">Complex Magazine</a></span>
+  </header>
+  <p>Click Get Tracks button below to instantly add all 700+ tracks to a Spotify playlist</p>
+  <a href="/#" class="paper-btn">Get Tracks</a>
+</div>
+<div class="pageContent">
+  <% var count = 0; %>
+  <% for(var k = 0; k < albums.length / 5; k++) {%>
+    <div class="row child-borders">
+      <% for(var i = count; i < count + 5; i++) { %>
+        <div class="collapsible border-dotted">
+          <input id="collapsible<%=i%>" type="checkbox" name="collapsible">
+          <label for="collapsible<%=i%>"><%=albums[i].name%></label>
+          <div class="collapsible-body">
+            <h3 class="artistName">
+              <%=albums[i].artist%>
+            </h3>
+            <ol>
+              <% for(var j = 0; j < albums[i].tracklist.length; j++) {%>
+                <li>
+                  <%=albums[i].tracklist[j].name %>
+                </li>
+              <% } %>
+            </ol>
+          </div>
+        </div>
+      <% } %>
+    <% count+=5 %>
+    </div>
+  <% } %>
+</div>
+<% include partials/footer %>

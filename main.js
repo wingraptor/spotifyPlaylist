@@ -35,7 +35,7 @@ const redirect_uri = "http://localhost:3000/callback";
 const stateKey = "spotify_auth_state";
 
 // Generates random string containing letters and numbers
-const generateRandomString = function(length) {
+const generateRandomString = function (length) {
   var text = "";
   var possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -52,8 +52,16 @@ const options = {
   json: true // Automatically stringifies the body to JSON
 };
 
-app.get("/", function(req, res) {
-  res.render("home.ejs");
+app.get("/", function (req, res) {
+  Album.find({}, function(err,albums){
+    if(err){
+      console.log(err);
+    }
+    else{
+      res.render("home.ejs", {albums:albums});
+    }
+  })
+
 });
 
 
@@ -64,7 +72,7 @@ https://github.com/spotify/web-api-auth-examples/blob/master/authorization_code/
 ----------------------------------------------------------------------------------------------------------------- */
 
 
-app.get("/login", function(req, res) {
+app.get("/login", function (req, res) {
   const state = generateRandomString(16);
   res.cookie(stateKey, state); // generate cookie in the form: "stateKey:state"
 
@@ -73,19 +81,19 @@ app.get("/login", function(req, res) {
     "playlist-modify-public playlist-modify-private user-read-private";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
-      // returns a query string in the format - "response_type=code?client_id=clientID"
-      queryString.stringify({
-        response_type: "code",
-        client_id: client_id,
-        scope: scope,
-        redirect_uri: redirect_uri,
-        state: state
-      })
+    // returns a query string in the format - "response_type=code?client_id=clientID"
+    queryString.stringify({
+      response_type: "code",
+      client_id: client_id,
+      scope: scope,
+      redirect_uri: redirect_uri,
+      state: state
+    })
   );
 });
 
 // Defines route which is redirected to after user authorization from the /login route
-app.get("/callback", function(req, res) {
+app.get("/callback", function (req, res) {
   // your application requests refresh and access tokens
   // after checking the state parameter
 
@@ -98,9 +106,9 @@ app.get("/callback", function(req, res) {
   if (state === null || state !== storedState) {
     res.redirect(
       "/#" +
-        queryString.stringify({
-          error: "state_mismatch"
-        })
+      queryString.stringify({
+        error: "state_mismatch"
+      })
     );
   } else {
     res.clearCookie(stateKey);
@@ -121,7 +129,7 @@ app.get("/callback", function(req, res) {
     };
     // Send request to get access token and refresh token
     rp.post(authOptions)
-      .then(function(body) {
+      .then(function (body) {
         var access_token = body.access_token,
           refresh_token = body.refresh_token;
 
@@ -150,8 +158,8 @@ app.get("/callback", function(req, res) {
                 // Update options object with endpoint to add tracks to playlist
                 options.url = `https://api.spotify.com/v1/playlists/${body.id}/tracks`;
                 uriConstructor();
-            })
-              .then(function(){
+              })
+              .then(function () {
                 res.send("Complete");
               });
           })
@@ -159,7 +167,7 @@ app.get("/callback", function(req, res) {
             console.log(err);
           });
       })
-      .catch(function(err){
+      .catch(function (err) {
         res.redirect('/#' +
           queryString.stringify({
             error: 'invalid_token'
@@ -175,7 +183,7 @@ see here: https://developer.spotify.com/documentation/web-api/reference/playlist
 -------------------------------------------------------------------------------------------------------- */
 
 function uriConstructor() {
-  Album.find({}, "tracklist.track_id", function(err, val) {
+  Album.find({}, "tracklist.track_id", function (err, val) {
     var count = 0;
     var tracksArray = [];
 
@@ -203,17 +211,17 @@ function addTracks(arr) {
   options.body = { uris: arr };
   // send request to add tracks to playlist
   rp(options)
-    .then(function(body) {
+    .then(function (body) {
       console.log("batch successfully added");
     })
-    .catch(function(err) {
+    .catch(function (err) {
       console.log(`Error adding tracks to playlist: ${err}`);
     });
 }
 
 //Tell Express to listen for requests on port 3000 (starts local server)
 //Visit localhost:3000 to reach site being served by local server.
-app.listen(port, IP, function() {
+app.listen(port, IP, function () {
   //Logs "Server has started" to the console when server has been started
   console.log("Server has started");
 });
