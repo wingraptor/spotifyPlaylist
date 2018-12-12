@@ -1,7 +1,7 @@
 <% include partials/header %>
-<body class="albums">
+<body class="albumsPage">
   <header>
-    <h1>Top 50 Albums and Tracks</h1>
+    <h1>Best 50 Albums and Tracks</h1>
     <p>Below are the Top 50 Albums of 2018, click on each album title to see the artist and full tracklist</p>
   </header>
   <div class="navigation">
@@ -11,13 +11,13 @@
 <div class="pageContent">
   <% var count = 0; %>
   <% for(var k = 0; k < albums.length / 5; k++) {%>
-  <div class="row child-borders">
+  <div class="row child-borders albumList">
     <% for(var i = count; i < count + 5; i++) { %>
-    <div class="collapsible border-dotted">
+    <div class="collapsible border-dotted album">
       <input id="collapsible<%=i%>" type="checkbox" name="collapsible">
       <label for="collapsible<%=i%>">
         <%=albums[i].name%></label>
-      <div class="collapsible-body">
+      <div class="collapsible-body albumInfo">
         <h3 class="artistName">
           <%=albums[i].artist%>
         </h3>
