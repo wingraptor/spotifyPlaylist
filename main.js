@@ -31,7 +31,7 @@ app.use(express.static(__dirname + "/public"));
 //Spotify config
 const client_id = process.env.CLIENT_ID; // Spotify client id
 const client_secret = process.env.CLIENT_SECRET; // Spotify secret
-const redirect_uri = process.env.REDIRECT_URI || "http://localhost:3000/albums";
+const redirect_uri = process.env.REDIRECT_URI || "http://localhost:3000/callback";
 const stateKey = "spotify_auth_state";
 
 // Generates random string containing letters and numbers
@@ -164,7 +164,7 @@ app.get("/callback", function (req, res) {
                 uriConstructor();
               })
               .then(function () {
-                res.send("Complete");
+                res.redirect("albums");
               });
           })
           .catch(function (err) {
