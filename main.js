@@ -151,7 +151,7 @@ app.get("/callback", function (req, res) {
             options.url = `https://api.spotify.com/v1/users/${body.id}/playlists`;
             options.method = "POST";
             options.body = {
-              name: "Top 50 Hip hop tracks - 2018",
+              name: "Top Tracks of 2018",
               description:
                 "Songs from the best 50 albums of 2018 according to Complex Mag.",
               public: false
