@@ -1,32 +1,58 @@
 html {
-  /* width: 100%; */
-  /* height: 100%; */
+  height: 100%;
 }
 
 body{
   /* See https://www.toptal.com/designers/subtlepatterns/page/2/ for bg patterns */
   background: url(/images/wavy-dots.png);
   background-image: url(/images/wavy-dots.png);
-  /* width: 100%; */
-  /* height: 100%; */
-  /* display: flex; */
-  /* align-items: center;
-  justify-content: center; */
-}
-
-.headerDiv{
   text-align: center;
-  margin-bottom: 5%;
 }
 
-.headerDiv .paper-btn {
+/* .home class selects homepage body element */
+.home{ 
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+}
+
+div .paper-btn {
   display: inline-block;
 }
 
-.headerDiv h1{
-  margin-bottom: 1px;
+header h1{
+  margin-bottom: 3px;
 }
 
+.home header p{
+  margin-bottom: 5%;
+}
+
+
+
+.albums .navigation p{
+  margin-top: 3px;
+}
+
+.home .navigation p{
+  margin-bottom: 3px;
+}
+
+a.fas{
+  /* text-decoration: none; */
+  background-image: none;
+  transition: all 235ms ease-in-out 0s;
+}
+
+a.fas:hover{
+  -webkit-transform: translate3d(0,2px,0);
+  transform: translate3d(0,2px,0);
+  box-shadow: 2px 8px 8px -5px rgba(0,0,0,.3);
+}
+
+/* Album Page Styles */
 .pageContent {
   display: grid;
   grid-template-columns: 400px 400px 400px;
@@ -36,10 +62,21 @@ body{
   justify-content: center;
 }
 .collapsible{
-  width: 100%
+  width: 100%;
 }
 
 .artistName {
   margin-top: 0px;
   margin-bottom: 0px;
+}
+
+@media all and (max-width:800px){
+  .pageContent {
+    display: flex;
+    flex-direction: column;
+  }
+  .row.child-borders {
+    width: 80%;
+    margin-bottom: 10%;
+  } 
 }

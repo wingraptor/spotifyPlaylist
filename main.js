@@ -53,15 +53,19 @@ const options = {
 };
 
 app.get("/", function (req, res) {
-  Album.find({}, function(err,albums){
-    if(err){
+  res.render("home");
+
+});
+
+app.get("/albums", function(req,res){
+  Album.find({}, function (err, albums) {
+    if (err) {
       console.log(err);
     }
-    else{
-      res.render("home.ejs", {albums:albums});
+    else {
+      res.render("albums", { albums: albums });
     }
   })
-
 });
 
 
