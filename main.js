@@ -11,11 +11,14 @@ const cookieParser = require("cookie-parser"),
 
 //Environment variable setup
 require("dotenv").config();
+const port = process.env.PORT || 3000;
+const IP = process.env.IP || "";
+const databaseUrl = process.env.DATABASE_URL || "mongodb://localhost:27017/spotify";
 
 
 //mongoose config
 mongoose.connect(
-  "mongodb://localhost:27017/spotify",
+  databaseUrl,
   { useNewUrlParser: true }
 );
 
@@ -25,13 +28,10 @@ app.set("view engine", "ejs");
 app.use(cookieParser());
 app.use(express.static(__dirname + "/public"));
 
-const port = process.env.PORT || 3000;
-const IP = process.env.IP || "";
-
 //Spotify config
-const client_id = process.env.client_id; // Spotify client id
-const client_secret = process.env.client_secret; // Spotify secret
-const redirect_uri = "http://localhost:3000/callback";
+const client_id = process.env.CLIENT_ID; // Spotify client id
+const client_secret = process.env.CLIENT_SECRET; // Spotify secret
+const redirect_uri = process.env.REDIRECT_URI || "http://localhost:3000/albums";
 const stateKey = "spotify_auth_state";
 
 // Generates random string containing letters and numbers
