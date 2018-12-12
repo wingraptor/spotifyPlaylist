@@ -33,6 +33,7 @@ const client_id = process.env.CLIENT_ID; // Spotify client id
 const client_secret = process.env.CLIENT_SECRET; // Spotify secret
 const redirect_uri = process.env.REDIRECT_URI || "http://localhost:3000/callback";
 const stateKey = "spotify_auth_state";
+var trackCount = 0;
 
 // Generates random string containing letters and numbers
 const generateRandomString = function (length) {
@@ -63,7 +64,7 @@ app.get("/albums", function(req,res){
       console.log(err);
     }
     else {
-      res.render("albums", { albums: albums });
+      res.render("albums", { albums: albums, trackCount: trackCount });
     }
   })
 });
@@ -217,6 +218,13 @@ function addTracks(arr) {
   rp(options)
     .then(function (body) {
       console.log("batch successfully added");
+      //Count Number of track successfully added to playlist
+      if (arr.length % 100 === 0){
+          trackCount += 100;
+      }
+      else {
+        trackCount += arr.length % 100;
+      }
     })
     .catch(function (err) {
       console.log(`Error adding tracks to playlist: ${err}`);

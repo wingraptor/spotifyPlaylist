@@ -26,13 +26,13 @@ a {
 }
 
 h1, .paper-btn, .fas, a:visited, .album:nth-child(even) label, 
-.album:nth-child(even) .albumInfo {
+.album:nth-child(even) .albumInfo, .error {
   color:crimson;
 }
 
 
 /* Select label and albumInfo elements of every other album class*/
-.album:nth-child(odd) label, .album:nth-child(odd) .albumInfo {
+.album:nth-child(odd) label, .album:nth-child(odd) .albumInfo, .sucess {
   color: #27592D;
 }
 
