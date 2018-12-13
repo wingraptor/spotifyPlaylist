@@ -47,17 +47,12 @@ const generateRandomString = function (length) {
   return text;
 };
 
-// Options to pass to various HTTP requests to Spotify APIS
-const options = {
-  url: `https://api.spotify.com/v1/me`,
-  json: true // Automatically stringifies the body to JSON
-};
-
 app.get("/", function (req, res) {
   res.render("home");
 
 });
 
+// Loads Page to display all albums
 app.get("/albums", function(req,res){
   Album.find({}, function (err, albums) {
     if (err) {
@@ -138,31 +133,53 @@ app.get("/callback", function (req, res) {
         var access_token = body.access_token,
           refresh_token = body.refresh_token;
 
-        // Set the access token 
-        options.headers = { Authorization: `Bearer ${access_token}` };
         /*--------------------------------------------------------
-        
+                              Get UserID
         https://github.com/request/request-promise - for more info.
-        
         -----------------------------------------------------------*/
-        // Get UserID
-        rp(options)
-          .then(function (body) {
-            // Update options object
-            options.url = `https://api.spotify.com/v1/users/${body.id}/playlists`;
-            options.method = "POST";
-            options.body = {
-              name: "Top Tracks of 2018",
-              description:
-                "Songs from the best 50 albums of 2018 according to Complex Mag.",
-              public: false
+
+        // Options to be passed to get UserID
+        var userOptions = {
+          url: `https://api.spotify.com/v1/me`,
+          json: true, // Automatically stringifies the body to JSON
+          headers:{
+            Authorization: `Bearer ${access_token}` // Set the access token received from post request to https://accounts.spotify.com/api/token
+          }
+        };
+        //Call to get UserID in body of response
+        rp(userOptions)
+          .then(function (user) {
+
+            // Options to be passed to Create Playlist
+            var playlistOptions = {
+              url: `https://api.spotify.com/v1/users/${user.id}/playlists`, //body.id is the userID received 
+              method: "POST",
+              body: {
+                name: "Top Tracks of 2018",
+                description:
+                  "Songs from the best 50 albums of 2018 according to Complex Mag.",
+                public: false               
+              },
+              json: true, // Automatically stringifies the body to JSON
+              headers: {
+                Authorization: `Bearer ${access_token}` // Set the access token received from post request to https://accounts.spotify.com/api/token
+              }
             };
-            // Create new playlist
-            rp(options)
-              .then(function (body) {
-                // Update options object with endpoint to add tracks to playlist
-                options.url = `https://api.spotify.com/v1/playlists/${body.id}/tracks`;
-                uriConstructor();
+
+            /*---------------------------
+                Create new playlist
+            -----------------------------*/
+            rp(playlistOptions)
+              .then(function (playlist) {
+                var addTracksOptions = {
+                  url: `https://api.spotify.com/v1/playlists/${playlist.id}/tracks`,
+                  method: "POST",
+                  json: true, // Automatically stringifies the body to JSON,
+                  headers: {
+                    Authorization: `Bearer ${access_token}` // Set the access token received from post request to https://accounts.spotify.com/api/token
+                  }
+                }
+                uriConstructor(addTracksOptions);
               })
               .then(function () {
                 res.redirect("albums");
@@ -187,7 +204,7 @@ Queries DB for trackIDs and constructs an array of track IDs (uris)
 see here: https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/
 -------------------------------------------------------------------------------------------------------- */
 
-function uriConstructor() {
+function uriConstructor(addTracksOptions) {
   Album.find({}, "tracklist.track_id", function (err, val) {
     var count = 0;
     var tracksArray = [];
@@ -198,7 +215,7 @@ function uriConstructor() {
         count++;
         // Allow batches of 100 songs to be added to playlist
         if (count === 100) {
-          addTracks(tracksArray);
+          addTracks(tracksArray, addTracksOptions);
           // Prepare for a new batch of tracks to be created
           tracksArray = [];
           count = 0;
@@ -206,16 +223,16 @@ function uriConstructor() {
       }
     }
     // Allows batches of smaller than 100 tracks to be added to playlist
-    addTracks(tracksArray);
+    addTracks(tracksArray, addTracksOptions);
   });
 }
 
 // Add batches of songs to Spotify playlist
-function addTracks(arr) {
+function addTracks(arr, addTracksOptions) {
   // Add array to request body
-  options.body = { uris: arr };
+  addTracksOptions.body = { uris: arr };
   // send request to add tracks to playlist
-  rp(options)
+  rp(addTracksOptions)
     .then(function (body) {
       console.log("batch successfully added");
       //Count Number of track successfully added to playlist
