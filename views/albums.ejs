@@ -8,37 +8,32 @@
     <a class="fas fa-arrow-up border border-5 border-primary" href="/"></a>
     <p>Go Home</p>
   </div>
-  <% if (trackCount === 703) { %>
-    <p class="success"><%=trackCount%> of 703 tracks added successfully</p>
-  <% } else if(trackCount < 703 && trackCount > 0) { %>
-    <p class="error">Error: Only <%=trackCount%> of 703 tracks added successfully</p>
-  <% } %>
-<div class="pageContent">
-  <% var count = 0; %>
-  <% for(var k = 0; k < albums.length / 5; k++) {%>
-  <div class="row child-borders albumList">
-    <% for(var i = count; i < count + 5; i++) { %>
-    <div class="collapsible border-dotted album">
-      <input id="collapsible<%=i%>" type="checkbox" name="collapsible">
-      <label for="collapsible<%=i%>">
-        <%=albums[i].name%></label>
-      <div class="collapsible-body albumInfo">
-        <h3 class="artistName">
-          <%=albums[i].artist%>
-        </h3>
-        <ol>
-          <% for(var j = 0; j < albums[i].tracklist.length; j++) {%>
-          <li>
-            <%=albums[i].tracklist[j].name %>
-          </li>
-          <% } %>
-        </ol>
+  <div class="pageContent">
+    <% var count = 0; %>
+    <% for(var k = 0; k < albums.length / 5; k++) {%>
+    <div class="row child-borders albumList">
+      <% for(var i = count; i < count + 5; i++) { %>
+      <div class="collapsible border-dotted album">
+        <input id="collapsible<%=i%>" type="checkbox" name="collapsible">
+        <label for="collapsible<%=i%>">
+          <%=albums[i].name%></label>
+        <div class="collapsible-body albumInfo">
+          <h3 class="artistName">
+            <%=albums[i].artist%>
+          </h3>
+          <ol>
+            <% for(var j = 0; j < albums[i].tracklist.length; j++) {%>
+            <li>
+              <%=albums[i].tracklist[j].name %>
+            </li>
+            <% } %>
+          </ol>
+        </div>
       </div>
+      <% } %>
+      <% count+=5 %>
     </div>
     <% } %>
-    <% count+=5 %>
   </div>
-  <% } %>
-</div>
 
 <% include partials/footer %>

@@ -32,7 +32,7 @@ h1, .paper-btn, .fas, a:visited, .album:nth-child(even) label,
 
 
 /* Select label and albumInfo elements of every other album class*/
-.album:nth-child(odd) label, .album:nth-child(odd) .albumInfo, .sucess {
+.album:nth-child(odd) label, .album:nth-child(odd) .albumInfo, .success {
   color: #27592D;
 }
 

@@ -33,7 +33,7 @@ const client_id = process.env.CLIENT_ID; // Spotify client id
 const client_secret = process.env.CLIENT_SECRET; // Spotify secret
 const redirect_uri = process.env.REDIRECT_URI || "http://localhost:3000/callback";
 const stateKey = "spotify_auth_state";
-var trackCount = 0;
+// var trackCount = 0;
 
 // Generates random string containing letters and numbers
 const generateRandomString = function (length) {
@@ -65,16 +65,17 @@ app.get("/albums", function(req,res){
 });
 
 // Loads Page to display all albums and number of tracks sucessfully added
-app.get("/albums/added", function (req, res) {
-  Album.find({}, function (err, albums) {
-    if (err) {
-      console.log(err);
-    }
-    else {
-      res.render("albumsAdded", { albums: albums, trackCount: trackCount });
-    }
-  });
-});
+// app.get("/albums/added", function (req, res) {
+//   Album.find({}, function (err, albums) {
+//     if (err) {
+//       console.log(err);
+//     }
+//     else {
+//       res.render("albumsAdded", { albums: albums, trackCount: trackCount });
+//     }
+//     trackCount = 0;
+//   });
+// });
 
 
 /*--------------------------------------------------------------------------------------------------------------
@@ -194,7 +195,7 @@ app.get("/callback", function (req, res) {
                 uriConstructor(addTracksOptions);
               })
               .then(function () {
-                res.redirect("albums/added");
+                res.redirect("albums");
               });
           })
           .catch(function (err) {
@@ -248,12 +249,12 @@ function addTracks(arr, addTracksOptions) {
     .then(function (body) {
       console.log("batch successfully added");
       //Count Number of track successfully added to playlist
-      if (arr.length % 100 === 0){
-          trackCount += 100;
-      }
-      else {
-        trackCount += arr.length % 100;
-      }
+      // if (arr.length % 100 === 0){
+      //     trackCount += 100;
+      // }
+      // else {
+      //   trackCount += arr.length % 100;
+      // }
     })
     .catch(function (err) {
       console.log(`Error adding tracks to playlist: ${err}`);
