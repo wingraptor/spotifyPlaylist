@@ -59,9 +59,21 @@ app.get("/albums", function(req,res){
       console.log(err);
     }
     else {
-      res.render("albums", { albums: albums, trackCount: trackCount });
+      res.render("albums", { albums: albums});
     }
-  })
+  });
+});
+
+// Loads Page to display all albums and number of tracks sucessfully added
+app.get("/albums/added", function (req, res) {
+  Album.find({}, function (err, albums) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.render("albumsAdded", { albums: albums, trackCount: trackCount });
+    }
+  });
 });
 
 
@@ -182,7 +194,7 @@ app.get("/callback", function (req, res) {
                 uriConstructor(addTracksOptions);
               })
               .then(function () {
-                res.redirect("albums");
+                res.redirect("albums/added");
               });
           })
           .catch(function (err) {
