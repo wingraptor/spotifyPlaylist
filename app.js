@@ -2,7 +2,7 @@ const $ = require("cheerio");
 const puppeteer = require("puppeteer");
 const mongoose = require("mongoose");
 const url =
-  "https://www.complex.com/music/best-albums-2018/mariah-carey-caution";
+  "https://www.complex.com/music/best-albums-2018";
 
 //Spotify config
 const client_id = process.env.client_id; // Spotify client id
@@ -24,7 +24,8 @@ var albumSchema = new mongoose.Schema({
   name: String,
   artist: String,
   album_id: String,
-  tracklist: [{ track_id: String, name: String, track_number: Number }]
+  tracklist: [{ track_id: String, name: String, track_number: Number }],
+  position: Number
 });
 
 var Album = mongoose.model("Album", albumSchema);
@@ -41,20 +42,57 @@ var Album = mongoose.model("Album", albumSchema);
 //     });
 //   })
 //   .then(function(html) {
-//     //Select markup on page containing artist and album names.
+//     //Select markup on page containing artist and album names 
 //     const albumArtistHTML = $(".list-slide__title", html);
-//     //Add artist, album and position of each album to an array
+//     //Add artist, album and position of each album to an array - in the form:  27. Royce Da 5’9”, ‘Book of Ryan’
 //     albumArtistHTML.each(function() {
 //       albumArtistArr.push($(this).text());
 //     });
-//     // Extract album names and add to database - https://stackoverflow.com/questions/12367126/how-can-i-get-a-substring-located-between-2-quotes
+//     // Extract album names and add to database - in the form: Book of Ryan
+//     // https://stackoverflow.com/questions/12367126/how-can-i-get-a-substring-located-between-2-quotes
 //     albumArtistArr.forEach(function(e) {
 //       Album.create({
-//         name: e.match(/‘([^']+)’/)[1]
+//         name: e.match(/‘([^']+)’/)[1] //Extracts album name, that is, text in between ' ' 
 //       });
 //     });
 //   })
 //   .catch(function(err) {
+//     //handle error
+//     console.log(err);
+//   });
+
+
+
+
+// Parse data from website to get list of albums to add to Album collection - https://www.complex.com/music/best-albums-2018
+// puppeteer
+//   .launch()
+//   .then(function (browser) {
+//     return browser.newPage();
+//   })
+//   .then(function (page) {
+//     return page.goto(url).then(function () {
+//       return page.content();
+//     });
+//   })
+//   .then(function (html) {
+//     //Select markup on page containing artist and album names.
+//     const albumArtistHTML = $(".list-slide__title", html);
+//     //Add artist, album and position of each album to an array  - in the form:  27. Royce Da 5’9”, ‘Book of Ryan’
+//     albumArtistHTML.each(function () {
+//       albumArtistArr.push($(this).text());
+//     });
+//     // Update Album with position in Top50 - Note that Royce Da 5’9”, ‘Book of Ryan’ was note found in DB - I had to manually add the position
+//     // https://stackoverflow.com/questions/12367126/how-can-i-get-a-substring-located-between-2-quotes
+//     albumArtistArr.forEach(function (e) {
+//       //Find Album name in DB corresponding with extracted album name and update with corresponding position
+//       Album.findOneAndUpdate({ name: e.match(/‘([^']+)’/)[1] }, { position: e.match(/\d+/).map(Number)[0]}, //match returns an array of results, therefore first element extracted must be selected
+//         function (album){
+//           console.log(album);
+//         } );  
+//     });
+//   })
+//   .catch(function (err) {
 //     //handle error
 //     console.log(err);
 //   });

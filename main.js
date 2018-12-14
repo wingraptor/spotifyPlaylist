@@ -52,9 +52,9 @@ app.get("/", function (req, res) {
 
 });
 
-// Loads Page to display all albums
+// Loads Page to display all albums - sorted in ascending order according to their position in Top50
 app.get("/albums", function(req,res){
-  Album.find({}, function (err, albums) {
+  Album.find({}, null, { sort: { position: "ascending"}},function (err, albums) {
     if (err) {
       console.log(err);
     }

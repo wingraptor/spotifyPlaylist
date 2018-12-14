@@ -16,7 +16,12 @@
       <div class="collapsible border-dotted album">
         <input id="collapsible<%=i%>" type="checkbox" name="collapsible">
         <label for="collapsible<%=i%>">
-          <%=albums[i].name%></label>
+          <% if(albums[i].position === 1){ %>
+          <i class="fas fa-crown border border-5 border-primary"></i> <%=albums[i].name%>
+          <% } else {%>
+            <%=albums[i].position%>. <%=albums[i].name%>
+         <% } %>
+        </label>
         <div class="collapsible-body albumInfo">
           <h3 class="artistName">
             <%=albums[i].artist%>
@@ -31,6 +36,7 @@
         </div>
       </div>
       <% } %>
+      <!-- Determines number of albums per albumlist  -->
       <% count+=5 %>
     </div>
     <% } %>
