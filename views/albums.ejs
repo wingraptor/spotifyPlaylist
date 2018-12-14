@@ -20,12 +20,13 @@
           <i class="fas fa-crown border border-5 border-primary"></i> <%=albums[i].name%>
           <% } else {%>
             <%=albums[i].position%>. <%=albums[i].name%>
-         <% } %>
+        <% } %>
         </label>
         <div class="collapsible-body albumInfo">
           <h3 class="artistName">
             <%=albums[i].artist%>
           </h3>
+          <a href="https://open.spotify.com/album/<%=albums[i].album_id%>" target="_blank">link</a>
           <ol>
             <% for(var j = 0; j < albums[i].tracklist.length; j++) {%>
             <li>

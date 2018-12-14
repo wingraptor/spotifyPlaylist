@@ -4,7 +4,7 @@ html {
 
 body{
   /* See https://www.toptal.com/designers/subtlepatterns/page/2/ for bg patterns */
-  background: url("https://www.toptal.com/designers/subtlepatterns/patterns/hypnotize.png");
+  background: url("../images/hypnotize.png");
   text-align: center;
 }
 
@@ -21,17 +21,18 @@ a {
   background-image: linear-gradient(5deg,transparent 65%,#27592D 80%,transparent 90%),linear-gradient(165deg,transparent 5%,#27592D 15%,transparent 25%),linear-gradient(165deg,transparent 45%,#27592D 55%,transparent 65%),linear-gradient(15deg,transparent 25%,#27592D 35%,transparent 50%);
   background-position: 0 90%;
   background-repeat: repeat-x;
-  background-size: 4px 3px
+  background-size: 4px 3px;
+  color:crimson;
 }
 
 h1, .paper-btn, .fas, a:visited, .album:nth-child(even) label, 
-.album:nth-child(even) .albumInfo, .error {
+.album:nth-child(even) .albumInfo, .error, .album:nth-child(odd) a  {
   color:crimson;
 }
 
 
 /* Select label and albumInfo elements of every other album class*/
-.album:nth-child(odd) label, .album:nth-child(odd) .albumInfo, .success {
+.album:nth-child(odd) label, .album:nth-child(odd) .albumInfo, .success, .album:nth-child(even) a {
   color: #27592D;
 }
 
