@@ -4,8 +4,7 @@ html {
 
 body{
   /* See https://www.toptal.com/designers/subtlepatterns/page/2/ for bg patterns */
-  background: url(/images/wavy-dots.png);
-  background-image: url(/images/wavy-dots.png);
+  background: url("https://www.toptal.com/designers/subtlepatterns/patterns/hypnotize.png");
   text-align: center;
 }
 
