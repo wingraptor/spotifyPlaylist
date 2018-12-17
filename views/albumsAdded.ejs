@@ -9,13 +9,14 @@
     <a class="fas fa-arrow-up border border-5 border-primary" href="/"></a>
     <p>Go Home</p>
   </div>
-  <% if (trackCount === 703) { %>
-  <p class="success">
-    <%=trackCount%> of 703 tracks added successfully</p>
-  <% } else if(trackCount < 703) { %>
-  <p class="error">Error: Only
-    <%=trackCount%> of 703 tracks added successfully</p>
-  <% } %>
+  <%# if (trackCount === 703) { %>
+  <!-- <p class="success">
+    <%# trackCount%> of 703 tracks added successfully</p> -->
+  <%# } else if(trackCount < 703) { %>
+  <!-- <p class="error">Error: Only
+    <%#trackCount%> of 703 tracks added successfully</p> -->
+  <%# } %>
+  <a href="https://open.spotify.com/playlist/<%= playlist.id %>" target="_blank">Click to view playist</a>
   <div class="pageContent">
     <% var count = 0; %>
     <% for(var k = 0; k < albums.length / 5; k++) {%>

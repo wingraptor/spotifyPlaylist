@@ -193,7 +193,15 @@ app.get("/callback", function (req, res) {
                   }
                 }
                 uriConstructor(addTracksOptions);
-                res.redirect(`https://open.spotify.com/playlist/${playlist.id}`);
+                //Page rendered with link to created playlist
+                Album.find({}, null, { sort: { position: "ascending" } }, function (err, albums) {
+                  if (err) {
+                    console.log(err);
+                  }
+                  else {
+                    res.render("albumsAdded", { albums: albums, playlist:playlist });
+                  }
+                });
               })
               .catch(function (err) {
                 console.log(err);
