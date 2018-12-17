@@ -1,6 +1,6 @@
 # Best Tracks of 2018 Spotify Playlist Generator
 
-The name of this project is pretty self-explanatory. This is a web app that creates a Spotify playlist containing tracks from the best 50 albums of 2018 according to [Complex Magazine](https://www.complex.com/music/best-albums-2018/). The Complex Magazine article was parsed for the album names which were then used, via various queries to Spotify APIs, to generate a database of tracks, Spotify track/album IDs, artist names etc. for all 50 albums. This database is then queried to generate a private Spotify playlist of >700 tracks with two clicks.
+This is a web app that creates a Spotify playlist containing tracks from the best 50 albums of 2018 according to [Complex Magazine](https://www.complex.com/music/best-albums-2018/). The Complex Magazine article was parsed for the album names which were then used, via various queries to Spotify APIs, to generate a database of tracks, Spotify track/album IDs, artist names etc. for all 50 albums. This database is then queried to generate a private Spotify playlist of >700 tracks after appropriate authorizations are granted through logging into your account.
 
 ## Getting Started
 
@@ -12,11 +12,11 @@ You can also visit the [albums page](https://spotifyplaylistapp.herokuapp.com/al
 
 All you need is Spotify Account and you're good to go!
 
-The permissions granted to allow this app are as follows:
+The permissions granted to allow this app to work are as follows:
 
-* user-read-private - allows app to create the playlist for the logged in user
-* playlist-modify-private - allows app to add tracks to playlist
-* 
+* [user-read-private](https://developer.spotify.com/documentation/general/guides/scopes/#user-read-private) - allows app to create the playlist for the logged in user.
+* [playlist-modify-private](https://developer.spotify.com/documentation/general/guides/scopes/#playlist-modify-private) - allows app to create a private playlist and to add tracks to private playlist.
+* [playlist-modify-public](https://developer.spotify.com/documentation/general/guides/scopes/#playlist-modify-public) - allows app to create a pbulic playlist and to add tracks to public playlist.
 
 
 ## Built With 
