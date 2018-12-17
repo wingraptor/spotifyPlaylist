@@ -6,11 +6,17 @@ body{
   /* See https://www.toptal.com/designers/subtlepatterns/page/2/ for bg patterns */
   background: url("../images/hypnotize.png");
   text-align: center;
+  
+/* Fix footer to bottom of page - https://codepen.io/cbracco/pen/zekgx */
+  position: relative;
+  margin: 0;
+  padding-bottom: 12rem;
+  padding-top: 6rem;
+  min-height: 90%;
 }
 
 /* .home class selects homepage body element */
 .homePage{ 
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -29,7 +35,6 @@ h1, .paper-btn, .fas, a:visited, .album:nth-child(even) label,
 .album:nth-child(even) .albumInfo, .error, .album:nth-child(odd) a  {
   color:crimson;
 }
-
 
 /* Select label and albumInfo elements of every other album class*/
 .album:nth-child(odd) label, .album:nth-child(odd) .albumInfo, .success, .album:nth-child(even) a {
@@ -91,13 +96,16 @@ a.fas:hover{
 }
 
 
-
-@media all and (max-width:425px){
-  header, .getTrack {
-    padding-left: 4%;
-    padding-right: 4%;
-  }
+/* Fix footer to bottom of page - https://codepen.io/cbracco/pen/zekgx */
+.footer{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  height: 23px;
 }
+
 
 @media all and (max-height:635px){
   .navigation{
@@ -105,7 +113,27 @@ a.fas:hover{
   }
 }
 
-@media all and (max-width:800px){
+
+@media all and (max-width:1263px){
+  .pageContent {
+    display: grid;
+    grid-template-columns: 400px 400px;
+    grid-template-rows: auto auto auto auto auto;
+    grid-column-gap: 2%;
+    grid-row-gap: 4%;
+    justify-content: center;
+  }
+  body {
+    /* Fix footer to bottom of page - https://codepen.io/cbracco/pen/zekgx */
+    position: relative;
+    margin: 0;
+    padding-bottom: 12rem;
+    padding-top: 6rem;
+    min-height: 90%;
+  }
+}
+
+@media all and (max-width:850px){
   .pageContent {
     display: flex;
     flex-direction: column;
@@ -119,3 +147,12 @@ a.fas:hover{
     flex-direction: column;
   }
 }
+
+@media all and (max-width:425px){
+  header, .getTrack {
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+}
+
+

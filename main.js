@@ -193,9 +193,10 @@ app.get("/callback", function (req, res) {
                   }
                 }
                 uriConstructor(addTracksOptions);
+                res.redirect(`https://open.spotify.com/playlist/${playlist.id}`);
               })
-              .then(function () {
-                res.redirect("albums");
+              .catch(function (err) {
+                console.log(err);
               });
           })
           .catch(function (err) {
