@@ -3,7 +3,7 @@ const cookieParser = require("cookie-parser"),
       mongoose     = require("mongoose"),
       express      = require("express"),
       request      = require("request"),
-      Album        = require("./app.js"),
+      Album        = require("./models/albums.js"),
       ejs          = require("ejs"),
       rp           = require("request-promise");
 
